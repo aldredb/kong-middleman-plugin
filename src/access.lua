@@ -5,6 +5,7 @@ local url = require "socket.url"
 local string_format = string.format
 
 local kong_response = kong.response
+local kong_service_request = kong.service.request
 
 local get_headers = ngx.req.get_headers
 local get_uri_args = ngx.req.get_uri_args
@@ -130,10 +131,10 @@ function _M.execute(conf)
       response_body = string.match(body, "%b{}")
     end
 
-    return kong_response.set_headers({
-      ["Bla"] = "boo",
-      ["X-Foo"] = "foo3",
-    })
+    kong_service_request.set_headers({
+      ["animal"] = "koala",
+      ["mood"] = "anxious"
+    });
   end
 
 end
