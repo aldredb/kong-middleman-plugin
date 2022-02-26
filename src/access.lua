@@ -118,7 +118,7 @@ function _M.execute(conf)
     return kong_response.exit(status_code, response_body)
   end
 
-  if status_code = 200 then
+  if status_code == 200 then
     if err then 
       ngx.log(ngx.ERR, name .. "failed to read response from " .. host .. ":" .. tostring(port) .. ": ", err)
     end
