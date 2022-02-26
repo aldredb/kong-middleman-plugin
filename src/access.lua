@@ -115,7 +115,25 @@ function _M.execute(conf)
       response_body = string.match(body, "%b{}")
     end
 
-    return kong_response.send(status_code, response_body)
+    return kong_response.exit(status_code, response_body)
+  end
+
+  if status_code = 200 then
+    if err then 
+      ngx.log(ngx.ERR, name .. "failed to read response from " .. host .. ":" .. tostring(port) .. ": ", err)
+    end
+
+    local response_body
+    if conf.response == "table" then 
+      response_body = JSON:decode(string.match(body, "%b{}"))
+    else
+      response_body = string.match(body, "%b{}")
+    end
+
+    return kong_response.set_headers({
+      ["Bla"] = "boo",
+      ["X-Foo"] = "foo3",
+    })
   end
 
 end
