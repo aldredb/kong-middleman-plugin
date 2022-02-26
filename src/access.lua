@@ -132,12 +132,19 @@ function _M.execute(conf)
       kong_service_request.add_header("x-middleman-response",response_body)
     end
 
-    if type(response_body) == "table" then
-      -- Loop through the response body and generate headerss
-      for key, value in pairs(response_body) do
-        kong_service_request.add_header(key, value)
-      end
+    -- if type(response_body) == "table" then
+    --   -- Loop through the response body and generate headerss
+    --   for key, value in pairs(response_body) do
+    --     kong_service_request.add_header(key, value)
+    --   end
 
+    -- end
+    if type(response_body) == "table" then
+        if (response_body.origin ~= nil) then
+          kong_service_request.add_header("x-middleman-response-origin", response_body.origin)
+        else
+          kong_service_request.add_header("x-middleman-response-origin", "info_not_found")
+        end
     end
 
   end
