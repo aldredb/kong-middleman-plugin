@@ -120,9 +120,6 @@ function _M.execute(conf)
   end
 
   if status_code == 200 then
-    if err then 
-      ngx.log(ngx.ERR, name .. "failed to read response from " .. host .. ":" .. tostring(port) .. ": ", err)
-    end
 
     local response_body
     if conf.response == "table" then 
@@ -131,10 +128,18 @@ function _M.execute(conf)
       response_body = string.match(body, "%b{}")
     end
 
-    kong_service_request.set_headers({
-      ["animal"] = "koala",
-      ["mood"] = "anxious"
-    });
+    if type(response_body) == "string" then
+      kong_service_request.add_header("x-middleman-response",response_body)
+    end
+
+    if type(response_body) == "table" then
+      -- Loop through the response body and generate headerss
+      for key, value in pairs(response_body) do
+        kong_service_request.add_header(key, value)
+      end
+
+    end
+
   end
 
 end
